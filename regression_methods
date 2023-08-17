@@ -1,0 +1,281 @@
+Correlating COVID19 Deaths to Predictor Variables Using Multiple Linear Regression in R - Utilizing linear regression tools in R to determine if variables from global Coronavirus data were statistically significant in predicting the total deaths per million 
+
+
+# AGE VARIABLES 
+
+> round(cor(cbind(age$total_cases_per_million,age$median_age,age$aged_70_older)),2)
+     [,1] [,2] [,3]
+[1,] 1.00 0.63  0.6
+[2,] 0.63 1.00  0.9
+[3,] 0.60 0.90  1.0
+
+> my_data <- age
+> model <- lm(my_data$total_deaths_per_million ~ my_data$aged_70_older + my_data$median_age, data = age)
+> summary(model)
+
+Call:
+lm(formula = my_data$total_deaths_per_million ~ my_data$aged_70_older + 
+    my_data$median_age, data = age)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1735.57  -243.94   -73.77   122.92  1705.09 
+
+Coefficients:
+                      Estimate Std. Error t value
+(Intercept)            -289.75     215.38  -1.345
+my_data$aged_70_older    78.11      22.48   3.474
+my_data$median_age       13.82      10.43   1.325
+                      Pr(>|t|)    
+(Intercept)           0.180294    
+my_data$aged_70_older 0.000647 ***
+my_data$median_age    0.187063    
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 548.6 on 173 degrees of freedom
+Multiple R-squared:  0.4041,	Adjusted R-squared:  0.3972 
+F-statistic: 58.66 on 2 and 173 DF,  p-value: < 2.2e-16
+
+> summary(model)$coefficient
+                        Estimate Std. Error   t value
+(Intercept)           -289.75060  215.38245 -1.345284
+my_data$aged_70_older   78.11478   22.48234  3.474495
+my_data$median_age      13.81967   10.43338  1.324563
+                          Pr(>|t|)
+(Intercept)           0.1802942154
+my_data$aged_70_older 0.0006468597
+my_data$median_age    0.1870632467
+> confint(model)
+                            2.5 %    97.5 %
+(Intercept)           -714.866313 135.36512
+my_data$aged_70_older   33.739775 122.48978
+my_data$median_age      -6.773441  34.41279
+
+> plot(model)
+
+# HEALTH VARIABLES
+
+> my_data <- health
+> model <- lm(my_data$total_deaths_per_million ~ my_data$cardiovasc_death_rate + my_data$diabetes_prevalence + my_data$female_smokers + my_data$male_smokers, data = health)
+> summary(model)
+
+Call:
+lm(formula = my_data$total_deaths_per_million ~ my_data$cardiovasc_death_rate + 
+    my_data$diabetes_prevalence + my_data$female_smokers + my_data$male_smokers, 
+    data = health)
+
+Residuals:
+    Min      1Q  Median      3Q 
+-1241.2  -291.3  -126.3   186.9 
+    Max 
+ 1505.6 
+
+Coefficients:
+                               Estimate
+(Intercept)                   209.43761
+my_data$cardiovasc_death_rate  -0.06476
+my_data$diabetes_prevalence     3.92145
+my_data$female_smokers         49.99089
+my_data$male_smokers           -3.32595
+                              Std. Error
+(Intercept)                    154.44149
+my_data$cardiovasc_death_rate    0.42103
+my_data$diabetes_prevalence     11.94534
+my_data$female_smokers           4.63313
+my_data$male_smokers             3.91523
+                              t value
+(Intercept)                     1.356
+my_data$cardiovasc_death_rate  -0.154
+my_data$diabetes_prevalence     0.328
+my_data$female_smokers         10.790
+my_data$male_smokers           -0.849
+                              Pr(>|t|)
+(Intercept)                      0.177
+my_data$cardiovasc_death_rate    0.878
+my_data$diabetes_prevalence      0.743
+my_data$female_smokers          <2e-16
+my_data$male_smokers             0.397
+                                 
+(Intercept)                      
+my_data$cardiovasc_death_rate    
+my_data$diabetes_prevalence      
+my_data$female_smokers        ***
+my_data$male_smokers             
+---
+Signif. codes:  
+  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’
+  0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 530.9 on 133 degrees of freedom
+  (2 observations deleted due to missingness)
+Multiple R-squared:  0.4973,	Adjusted R-squared:  0.4822 
+F-statistic: 32.89 on 4 and 133 DF,  p-value: < 2.2e-16
+
+> sigma(model)/mean(my_data$total_deaths_per_million)
+[1] NA
+
+# QUALITY OF LIVING/INFRASTRUCTURE VARIABLES
+
+> my_data <- success
+> model <- lm(my_data$total_deaths_per_million ~ my_data$gdp_per_capita + my_data$handwashing_facilities + my_data$hospital_beds_per_thousand + my_data$human_development_index, data = success)
+> summary(model)
+
+Call:
+lm(formula = my_data$total_deaths_per_million ~ my_data$gdp_per_capita + 
+    my_data$handwashing_facilities + my_data$hospital_beds_per_thousand + 
+    my_data$human_development_index, data = success)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-635.63 -265.75  -74.34  157.61 1983.89 
+
+Coefficients:
+                                     Estimate
+(Intercept)                        -1.656e+03
+my_data$gdp_per_capita             -1.867e-02
+my_data$handwashing_facilities     -3.610e-01
+my_data$hospital_beds_per_thousand -2.789e+01
+my_data$human_development_index     3.465e+03
+                                   Std. Error
+(Intercept)                         4.417e+02
+my_data$gdp_per_capita              1.052e-02
+my_data$handwashing_facilities      2.746e+00
+my_data$hospital_beds_per_thousand  3.601e+01
+my_data$human_development_index     9.391e+02
+                                   t value
+(Intercept)                         -3.749
+my_data$gdp_per_capita              -1.775
+my_data$handwashing_facilities      -0.131
+my_data$hospital_beds_per_thousand  -0.775
+my_data$human_development_index      3.690
+                                   Pr(>|t|)
+(Intercept)                        0.000365
+my_data$gdp_per_capita             0.080246
+my_data$handwashing_facilities     0.895770
+my_data$hospital_beds_per_thousand 0.441260
+my_data$human_development_index    0.000444
+                                      
+(Intercept)                        ***
+my_data$gdp_per_capita             .  
+my_data$handwashing_facilities        
+my_data$hospital_beds_per_thousand    
+my_data$human_development_index    ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 418.4 on 69 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.3362,	Adjusted R-squared:  0.2977 
+F-statistic: 8.736 on 4 and 69 DF,  p-value: 9.145e-06
+
+# QUALITY OF LIVING/INFRASTRUCTURE INTERACTION MODEL
+
+> model <- lm(my_data$total_deaths_per_million ~ my_data$gdp_per_capita * my_data$human_development_index * my_data$handwashing_facilities * my_data$hospital_beds_per_thousand , data = success)
+> summary(model)
+
+Call:
+lm(formula = my_data$total_deaths_per_million ~ my_data$gdp_per_capita * 
+    my_data$human_development_index * my_data$handwashing_facilities * 
+    my_data$hospital_beds_per_thousand, data = success)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-799.6 -139.2    6.6  107.9 1472.4 
+
+Coefficients:
+                                                                                                                           Estimate
+(Intercept)                                                                                                               1.216e+03
+my_data$gdp_per_capita                                                                                                   -5.551e-01
+my_data$human_development_index                                                                                          -2.680e+03
+my_data$handwashing_facilities                                                                                            1.608e+00
+my_data$hospital_beds_per_thousand                                                                                       -9.345e+02
+my_data$gdp_per_capita:my_data$human_development_index                                                                    1.106e+00
+my_data$gdp_per_capita:my_data$handwashing_facilities                                                                     1.371e-03
+my_data$human_development_index:my_data$handwashing_facilities                                                            1.733e+01
+my_data$gdp_per_capita:my_data$hospital_beds_per_thousand                                                                 2.739e-01
+my_data$human_development_index:my_data$hospital_beds_per_thousand                                                        2.299e+03
+my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                                        -3.211e+01
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities                                    -5.829e-03
+my_data$gdp_per_capita:my_data$human_development_index:my_data$hospital_beds_per_thousand                                -5.598e-01
+my_data$gdp_per_capita:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                  7.523e-04
+my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                         3.388e+01
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand  1.037e-03
+                                                                                                                         Std. Error
+(Intercept)                                                                                                               1.474e+03
+my_data$gdp_per_capita                                                                                                    4.384e-01
+my_data$human_development_index                                                                                           3.109e+03
+my_data$handwashing_facilities                                                                                            2.266e+01
+my_data$hospital_beds_per_thousand                                                                                        1.438e+03
+my_data$gdp_per_capita:my_data$human_development_index                                                                    6.208e-01
+my_data$gdp_per_capita:my_data$handwashing_facilities                                                                     5.651e-03
+my_data$human_development_index:my_data$handwashing_facilities                                                            4.138e+01
+my_data$gdp_per_capita:my_data$hospital_beds_per_thousand                                                                 2.051e-01
+my_data$human_development_index:my_data$hospital_beds_per_thousand                                                        2.631e+03
+my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                                         1.643e+01
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities                                     7.169e-03
+my_data$gdp_per_capita:my_data$human_development_index:my_data$hospital_beds_per_thousand                                 2.948e-01
+my_data$gdp_per_capita:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                  2.560e-03
+my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                         2.743e+01
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand  3.102e-03
+                                                                                                                         t value
+(Intercept)                                                                                                                0.825
+my_data$gdp_per_capita                                                                                                    -1.266
+my_data$human_development_index                                                                                           -0.862
+my_data$handwashing_facilities                                                                                             0.071
+my_data$hospital_beds_per_thousand                                                                                        -0.650
+my_data$gdp_per_capita:my_data$human_development_index                                                                     1.782
+my_data$gdp_per_capita:my_data$handwashing_facilities                                                                      0.243
+my_data$human_development_index:my_data$handwashing_facilities                                                             0.419
+my_data$gdp_per_capita:my_data$hospital_beds_per_thousand                                                                  1.336
+my_data$human_development_index:my_data$hospital_beds_per_thousand                                                         0.874
+my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                                         -1.954
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities                                     -0.813
+my_data$gdp_per_capita:my_data$human_development_index:my_data$hospital_beds_per_thousand                                 -1.899
+my_data$gdp_per_capita:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                   0.294
+my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                          1.235
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand   0.334
+                                                                                                                         Pr(>|t|)
+(Intercept)                                                                                                                0.4128
+my_data$gdp_per_capita                                                                                                     0.2105
+my_data$human_development_index                                                                                            0.3922
+my_data$handwashing_facilities                                                                                             0.9437
+my_data$hospital_beds_per_thousand                                                                                         0.5182
+my_data$gdp_per_capita:my_data$human_development_index                                                                     0.0801
+my_data$gdp_per_capita:my_data$handwashing_facilities                                                                      0.8091
+my_data$human_development_index:my_data$handwashing_facilities                                                             0.6769
+my_data$gdp_per_capita:my_data$hospital_beds_per_thousand                                                                  0.1868
+my_data$human_development_index:my_data$hospital_beds_per_thousand                                                         0.3857
+my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                                          0.0556
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities                                      0.4195
+my_data$gdp_per_capita:my_data$human_development_index:my_data$hospital_beds_per_thousand                                  0.0625
+my_data$gdp_per_capita:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                   0.7699
+my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                          0.2217
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand   0.7394
+                                                                                                                          
+(Intercept)                                                                                                               
+my_data$gdp_per_capita                                                                                                    
+my_data$human_development_index                                                                                           
+my_data$handwashing_facilities                                                                                            
+my_data$hospital_beds_per_thousand                                                                                        
+my_data$gdp_per_capita:my_data$human_development_index                                                                   .
+my_data$gdp_per_capita:my_data$handwashing_facilities                                                                     
+my_data$human_development_index:my_data$handwashing_facilities                                                            
+my_data$gdp_per_capita:my_data$hospital_beds_per_thousand                                                                 
+my_data$human_development_index:my_data$hospital_beds_per_thousand                                                        
+my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                                        .
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities                                     
+my_data$gdp_per_capita:my_data$human_development_index:my_data$hospital_beds_per_thousand                                .
+my_data$gdp_per_capita:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                                  
+my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand                         
+my_data$gdp_per_capita:my_data$human_development_index:my_data$handwashing_facilities:my_data$hospital_beds_per_thousand  
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 368.2 on 58 degrees of freedom
+  (3 observations deleted due to missingness)
+Multiple R-squared:  0.5679,	Adjusted R-squared:  0.4561 
+F-statistic: 5.081 on 15 and 58 DF,  p-value: 3.041e-06
